@@ -86,17 +86,17 @@ var PlacesAutocomplete = function (_Component) {
         };
       };
 
-      this.setState({
-        autocompleteItems: predictions.map(function (p, idx) {
-          return {
-            suggestion: p.description,
-            placeId: p.place_id,
-            active: false,
-            index: idx,
-            formattedSuggestion: formattedSuggestion(p.structured_formatting)
-          };
-        })
+      var filteredPredictions = this.props.filterPredictions ? predictions.filter(this.props.filterPredictions) : predictions;
+      var autocompleteItems = filteredPredictions.map(function (p, idx) {
+        return {
+          suggestion: p.description,
+          placeId: p.place_id,
+          active: false,
+          index: idx,
+          formattedSuggestion: formattedSuggestion(p.structured_formatting)
+        };
       });
+      this.setState({ autocompleteItems: autocompleteItems });
     }
   }, {
     key: 'fetchPredictions',
@@ -376,6 +376,7 @@ PlacesAutocomplete.propTypes = {
   clearItemsOnError: _propTypes2.default.bool,
   onSelect: _propTypes2.default.func,
   autocompleteItem: _propTypes2.default.func,
+  filterPredictions: _propTypes2.default.func,
   classNames: _propTypes2.default.shape({
     root: _propTypes2.default.string,
     input: _propTypes2.default.string,
@@ -415,6 +416,7 @@ PlacesAutocomplete.defaultProps = {
       suggestion
     );
   },
+  filterPredictions: null,
   styles: {},
   options: {},
   debounce: 200
